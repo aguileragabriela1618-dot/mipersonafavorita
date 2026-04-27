@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para mi persona favorita</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #ffc0cb; /* El rosado de tu video */
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Importante para que no salga barra lateral */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            max-width: 80%;
+            z-index: 10; /* La tarjeta va encima de los girasoles */
+            position: relative;
+        }
+
+        /* ESTILO DE LOS GIRASOLES Y CORAZONES */
+        .elemento-lluvia {
+            position: absolute;
+            top: -50px;
+            user-select: none;
+            pointer-events: none;
+            z-index: 1;
+            animation: caerVertical linear forwards;
+        }
+
+        /* ANIMACIÓN DE CAÍDA VERTICAL */
+        @keyframes caerVertical {
+            0% {
+                transform: translateY(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(110vh); /* Baja hasta el final */
+                opacity: 0.7;
+            }
+        }
+
+        /* ESTILO DE CORAZONES QUE APARECEN ARRIBA */
+        .corazon-top {
+            position: absolute;
+            z-index: 5;
+            animation: parpadear 2s ease-in-out infinite;
+        }
+
+        @keyframes parpadear {
+            0%, 100% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        h1 { color: #d81b60; font-size: 1.5rem; }
+        p { color: #555; line-height: 1.6; }
+        button {
+            background-color: #ff4081;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        #seccion-foto { display: none; margin-top: 20px; }
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 15px;
+            border: 5px solid #fce4ec;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="mensaje-inicial">
+        <h1>Hola mi persona favorita,</h1>
+        <p>Espero que te encuentres bien, solo pasaba a decirle cuánto amo a una personita que siempre va a ser importante para mí...</p>
+        <p><strong>¿Sabes quién es? Aquí va...</strong></p>
+        <button onclick="mostrarFoto()">Da click aquí</button>
+    </div>
+
+    <div id="seccion-foto">
+        <h1>¡Eres tú! 🧩</h1>
+        <img src="foto.jpg.jpeg" alt="Tú haciendo un rompecabezas">
+        <p>Te amo mucho.</p>
+    </div>
+</div>
+
+<script>
+    function mostrarFoto() {
+        document.getElementById('mensaje-inicial').style.display = 'none';
+        document.getElementById('seccion-foto').style.display = 'block';
+    }
+
+    // Función para crear la lluvia vertical (Girasoles y Corazones)
+    function crearLluvia() {
+        const opciones = ['🌻', '❤️'];
+        const item = document.createElement('div');
+        item.classList.add('elemento-lluvia');
+        item.innerText = opciones[Math.floor(Math.random() * opciones.length)];
+
+        item.style.left = Math.random() * 100 + "vw";
+        item.style.fontSize = (Math.random() * 20 + 20) + "px";
+        item.style.animationDuration = (Math.random() * 2 + 3) + "s";
+
+        document.body.appendChild(item);
+        setTimeout(() => item.remove(), 5000);
+    }
+
+    // Función para los corazones que aparecen y desaparecen arriba
+    function corazonesArriba() {
+        const corazon = document.createElement('div');
+        corazon.classList.add('corazon-top');
+        corazon.innerText = '❤️';
+        corazon.style.left = Math.random() * 100 + "vw";
+        corazon.style.top = (Math.random() * 20) + "vh";
+        corazon.style.fontSize = "20px";
+        
+        document.body.appendChild(corazon);
+        setTimeout(() => corazon.remove(), 2000);
+    }
+
+    // AQUÍ ES DONDE LE DECIMOS QUE SE EJECUTEN
+    setInterval(crearLluvia, 300); // Crea lluvia cada 0.3 segundos
+    setInterval(corazonesArriba, 600); // Crea corazones arriba cada 0.6 segundos
+</script>
+
+</body>
+</html>
