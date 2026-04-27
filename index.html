@@ -7,15 +7,16 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #ffc0cb; /* El rosado de tu video */
+            background-color: #fce4ec; 
             margin: 0;
             padding: 0;
-            overflow: hidden; /* Importante para que no salga barra lateral */
+            overflow: hidden; 
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             text-align: center;
+            position: relative;
         }
 
         .container {
@@ -24,45 +25,32 @@
             border-radius: 20px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             max-width: 80%;
-            z-index: 10; /* La tarjeta va encima de los girasoles */
+            z-index: 10; 
             position: relative;
         }
 
-        /* ESTILO DE LOS GIRASOLES Y CORAZONES */
-        .elemento-lluvia {
+        .girasol-confeti {
             position: absolute;
-            top: -50px;
+            top: -50px; 
+            font-size: 24px;
             user-select: none;
-            pointer-events: none;
-            z-index: 1;
-            animation: caerVertical linear forwards;
+            pointer-events: none; 
+            z-index: 1; 
+            opacity: 0; 
         }
 
-        /* ANIMACIÓN DE CAÍDA VERTICAL */
-        @keyframes caerVertical {
+        @keyframes lluviaGirasoles {
             0% {
-                transform: translateY(0);
-                opacity: 0;
+                transform: translateY(0vh) rotate(0deg);
+                opacity: 0; 
             }
             10% {
-                opacity: 1;
+                opacity: 1; 
             }
             100% {
-                transform: translateY(110vh); /* Baja hasta el final */
-                opacity: 0.7;
+                transform: translateY(110vh) rotate(360deg); 
+                opacity: 0.2; 
             }
-        }
-
-        /* ESTILO DE CORAZONES QUE APARECEN ARRIBA */
-        .corazon-top {
-            position: absolute;
-            z-index: 5;
-            animation: parpadear 2s ease-in-out infinite;
-        }
-
-        @keyframes parpadear {
-            0%, 100% { opacity: 0; transform: scale(0.5); }
-            50% { opacity: 1; transform: scale(1.2); }
         }
 
         h1 { color: #d81b60; font-size: 1.5rem; }
@@ -71,14 +59,18 @@
             background-color: #ff4081;
             color: white;
             border: none;
-            padding: 12px 25px;
+            padding: 10px 20px;
             border-radius: 50px;
             cursor: pointer;
             font-size: 1rem;
             margin-top: 20px;
-            font-weight: bold;
+            transition: 0.3s;
         }
-        #seccion-foto { display: none; margin-top: 20px; }
+        button:hover { background-color: #f50057; }
+
+        /* Control de visibilidad de secciones */
+        #seccion-foto, #seccion-qr { display: none; margin-top: 20px; }
+        
         img {
             max-width: 100%;
             height: auto;
@@ -101,46 +93,62 @@
         <h1>¡Eres tú! 🧩</h1>
         <img src="foto.jpg.jpeg" alt="Tú haciendo un rompecabezas">
         <p>Te amo mucho.</p>
+        <button onclick="mostrarQR()">Haz clic para más amor</button>
+    </div>
+
+    <div id="seccion-qr">
+        <h1>¡TE EXTRAÑO! 🥺</h1>
+        <p>No soy muy buena, ni para el amor, pero lo hice con mucho cariño...</p>
+        <img src="qr.png" alt="Escaneame">
+        <p>cuidate.</p>
     </div>
 </div>
 
 <script>
+    // Navegación entre secciones
     function mostrarFoto() {
         document.getElementById('mensaje-inicial').style.display = 'none';
         document.getElementById('seccion-foto').style.display = 'block';
     }
 
-    // Función para crear la lluvia vertical (Girasoles y Corazones)
-    function crearLluvia() {
-        const opciones = ['🌻', '❤️'];
-        const item = document.createElement('div');
-        item.classList.add('elemento-lluvia');
-        item.innerText = opciones[Math.floor(Math.random() * opciones.length)];
-
-        item.style.left = Math.random() * 100 + "vw";
-        item.style.fontSize = (Math.random() * 20 + 20) + "px";
-        item.style.animationDuration = (Math.random() * 2 + 3) + "s";
-
-        document.body.appendChild(item);
-        setTimeout(() => item.remove(), 5000);
+    function mostrarQR() {
+        document.getElementById('seccion-foto').style.display = 'none';
+        document.getElementById('seccion-qr').style.display = 'block';
     }
 
-    // Función para los corazones que aparecen y desaparecen arriba
-    function corazonesArriba() {
-        const corazon = document.createElement('div');
-        corazon.classList.add('corazon-top');
-        corazon.innerText = '❤️';
-        corazon.style.left = Math.random() * 100 + "vw";
-        corazon.style.top = (Math.random() * 20) + "vh";
-        corazon.style.fontSize = "20px";
+    // --- TU ANIMACIÓN ORIGINAL (CON CORAZONES AÑADIDOS) ---
+    const numGirasoles = 30; 
+
+    function crearGirasol() {
+        const girasol = document.createElement('div');
+        girasol.classList.add('girasol-confeti');
         
-        document.body.appendChild(corazon);
-        setTimeout(() => corazon.remove(), 2000);
+        // Mezclamos girasoles y corazones
+        const opciones = ['🌻', '❤️'];
+        girasol.innerText = opciones[Math.floor(Math.random() * opciones.length)];
+
+        const posX = Math.random() * 100;
+        girasol.style.left = `${posX}vw`;
+
+        const duracion = Math.random() * 3 + 3;
+        girasol.style.animation = `lluviaGirasoles ${duracion}s linear forwards`;
+
+        const retraso = Math.random() * 5;
+        girasol.style.animationDelay = `${retraso}s`;
+
+        document.body.appendChild(girasol);
+
+        girasol.addEventListener('animationend', () => {
+            girasol.remove();
+        });
     }
 
-    // AQUÍ ES DONDE LE DECIMOS QUE SE EJECUTEN
-    setInterval(crearLluvia, 300); // Crea lluvia cada 0.3 segundos
-    setInterval(corazonesArriba, 600); // Crea corazones arriba cada 0.6 segundos
+    for (let i = 0; i < numGirasoles; i++) {
+        crearGirasol();
+    }
+
+    // Esto hará que la lluvia sea infinita sin detenerse
+    setInterval(crearGirasol, 400); 
 </script>
 
 </body>
